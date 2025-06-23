@@ -3,7 +3,7 @@ import Link from "next/link"
 import type React from "react"
 
 import { motion } from "framer-motion"
-import { ShieldHalf, Users, Briefcase, MessageSquare, Home, Menu, X } from "lucide-react"
+import { ShieldHalf, Users, Home, Menu, X } from "lucide-react" // Removed Briefcase, MessageSquare
 import { useState, useEffect } from "react"
 
 const Logo = () => (
@@ -14,17 +14,15 @@ const Logo = () => (
     className="flex items-center space-x-2 rtl:space-x-reverse"
   >
     <ShieldHalf className="h-8 w-8 text-brand-gold animate-pulse" />
-    <span className="text-xl font-bold tracking-wider text-brand-cream">Phantom Force</span>
+    <span className="text-xl font-bold tracking-wider text-brand-cream">Iraq Cyber</span> {/* Updated Site Name */}
   </motion.div>
 )
 
+// Updated navItems
 const navItems = [
   { name: "الرئيسية", href: "#hero", icon: <Home size={18} /> },
   { name: "من نحن", href: "#about", icon: <Users size={18} /> },
   { name: "فريقنا", href: "#team", icon: <Users size={18} /> },
-  { name: "خبراتنا", href: "#expertise", icon: <Briefcase size={18} /> },
-  { name: "مشاريعنا", href: "#projects", icon: <Briefcase size={18} /> },
-  { name: "تواصل معنا", href: "#contact", icon: <MessageSquare size={18} /> },
 ]
 
 export default function Navbar() {

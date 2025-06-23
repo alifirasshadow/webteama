@@ -1,58 +1,45 @@
 "use client"
 
-import { Suspense, useRef, useMemo } from "react"
+import { Suspense, useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Points, PointMaterial, Stars as DreiStars } from "@react-three/drei"
-import type { BufferAttribute } from "three"
-import type { Points as PointsType } from "three"
+import { Stars as DreiStars } from "@react-three/drei"
+import type { Group } from "three"
 
-// Component for "Digital Rain" or "Code Flow"
-function DigitalRain(props: any) {
-  const ref = useRef<PointsType>(null!)
-  const numPoints = 7000 // Increased number of points for density
-  const positions = useMemo(() => {
-    const posArray = new Float32Array(numPoints * 3)
-    for (let i = 0; i < numPoints; i++) {
-      // Distribute along X and Z, Y will be animated
-      posArray[i * 3 + 0] = (Math.random() - 0.5) * 15 // Wider spread on X
-      posArray[i * 3 + 1] = (Math.random() - 0.5) * 10 // Initial Y spread
-      posArray[i * 3 + 2] = (Math.random() - 0.5) * 10 // Spread on Z for depth
-    }
-    return posArray
-  }, [numPoints])
+// Simplified and lighter background effect
+function LightParticleField() {
+  const groupRef = useRef<Group>(null!)
 
   useFrame((_state, delta) => {
-    if (ref.current && ref.current.geometry) {
-      const positionsAttribute = ref.current.geometry.attributes.position as BufferAttribute
-      for (let i = 0; i < numPoints; i++) {
-        positionsAttribute.array[i * 3 + 1] -= (0.1 + Math.random() * 0.2) * delta * 30 // Faster fall, varied speed
-        // Reset if particle falls too low
-        if (positionsAttribute.array[i * 3 + 1] < -6) {
-          positionsAttribute.array[i * 3 + 1] = 6 // Reset to top
-          positionsAttribute.array[i * 3 + 0] = (Math.random() - 0.5) * 15 // Re-randomize X for variation
-        }
-      }
-      positionsAttribute.needsUpdate = true
+    if (groupRef.current) {
+      groupRef.current.rotation.x += delta * 0.02
+      groupRef.current.rotation.y += delta * 0.03
     }
   })
 
   return (
-    <Points ref={ref} positions={positions} stride={3} frustumCulled={false} {...props}>
-      <PointMaterial
-        transparent
-        color="#D4AF37" // Gold color for the rain
-        size={0.025} // Smaller, more numerous points
-        sizeAttenuation={true}
-        depthWrite={false}
-        opacity={0.7}
+    <group ref={groupRef}>
+      <DreiStars
+        radius={80} // Slightly smaller radius for a less overwhelming feel
+        depth={40}
+        count={4000} // Reduced count for performance
+        factor={3.5} // Smaller star size
+        saturation={0}
+        fade
+        speed={0.4} // Slightly faster individual star movement for a subtle dynamic
       />
-    </Points>
+      {/* Optional: A second layer of stars with different properties for depth */}
+      <DreiStars
+        radius={60}
+        depth={30}
+        count={2000}
+        factor={3}
+        saturation={1} // Add a hint of color (will pick up gold from lights)
+        fade
+        speed={0.3}
+        color="#D4AF37" // Explicitly gold for this layer
+      />
+    </group>
   )
-}
-
-// Subtle background stars for depth
-function BackgroundStars() {
-  return <DreiStars radius={150} depth={70} count={6000} factor={5} saturation={0} fade speed={0.3} />
 }
 
 export default function Global3DBackground() {
@@ -68,11 +55,12 @@ export default function Global3DBackground() {
         background: "var(--brand-black)",
       }}
     >
-      <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
-        <ambientLight intensity={0.05} color="#D4AF37" />
+      <Canvas camera={{ position: [0, 0, 1], fov: 70 }}>
+        {" "}
+        {/* Adjusted fov slightly */}
+        <ambientLight intensity={0.1} color="#E0C670" /> {/* Lighter gold ambient light */}
         <Suspense fallback={null}>
-          <BackgroundStars />
-          <DigitalRain />
+          <LightParticleField />
         </Suspense>
       </Canvas>
     </div>

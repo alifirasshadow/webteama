@@ -1,214 +1,185 @@
 "use client"
 
-import React from "react"
-
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import type React from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import AnimatedTitle from "./animated-title"
+import { ShieldCheck, Code, Brain, Users, Zap, Target, Bot, Lock, Search, Activity } from "lucide-react"
 
 interface TeamMember {
   id: number
   name: string
   role: string
   avatarUrl: string
-  bio?: string
+  // bio?: string; // Bio removed
+  icon?: React.ElementType
 }
 
 const teamMembers: TeamMember[] = [
   {
     id: 1,
     name: "علي فراس",
-    role: "مطور Full-Stack",
+    role: "Ethical Hacking Specialist", // Translated role
     avatarUrl: "/avatars/team/ali-firas.svg",
-    bio: "يبني حلولاً رقمية متكاملة بشغف.",
+    icon: Code,
   },
   {
     id: 2,
     name: "عباس فراس",
-    role: "خبير أمن معلومات",
+    role: "Information Security Expert", // Translated role
     avatarUrl: "/avatars/team/abbas-firas.svg",
-    bio: "يدافع عن البيانات ويحصن الأنظمة ضد الهجمات.",
+    icon: ShieldCheck,
   },
   {
     id: 3,
     name: "حيدر فراس",
-    role: "محلل بيانات وذكاء اصطناعي",
+    role: "Data Analyst & AI Specialist", // Translated role
     avatarUrl: "/avatars/team/haider-firas.svg",
-    bio: "يستخرج الرؤى من البيانات لبناء مستقبل أذكى.",
+    icon: Brain,
   },
   {
     id: 4,
     name: "علي خالد",
-    role: "مهندس شبكات وأمن سحابي",
+    role: "Network & Cloud Security Engineer", // Translated role
     avatarUrl: "/avatars/team/ali-khaled.svg",
-    bio: "يصمم بنى تحتية قوية وآمنة في عالم متصل.",
+    icon: Users,
   },
   {
     id: 5,
     name: "حوراء عامر",
-    role: "مصممة واجهات وتجربة مستخدم (UI/UX)",
+    role: "UI/UX Designer", // Translated role
     avatarUrl: "/avatars/team/hawraa-amer.svg",
-    bio: "تبتكر تجارب مستخدم جذابة وسهلة الاستخدام.",
+    icon: Zap,
   },
   {
     id: 6,
     name: "صفا عادل",
-    role: "متخصصة في اختبار الاختراق الأخلاقي",
+    role: "Full-Stack Developer", // Translated role
     avatarUrl: "/avatars/team/safa-adel.svg",
-    bio: "تكشف الثغرات قبل أن يستغلها المهاجمون.",
+    icon: Target,
   },
   {
     id: 7,
     name: "امير راسم",
-    role: "باحث في التشفير والأمن السيبراني",
+    role: "Cryptography & Cyber Security Researcher", // Translated role
     avatarUrl: "/avatars/team/ameer-rasim.svg",
-    bio: "يطور تقنيات تشفير متقدمة لحماية الخصوصية.",
+    icon: Lock,
   },
   {
     id: 8,
     name: "هاشم سليم",
-    role: "مستشار أمن سيبراني",
+    role: "Cyber Security Consultant", // Translated role
     avatarUrl: "/avatars/team/hashim-salim.svg",
-    bio: "يقدم استشارات استراتيجية لتعزيز الأمن الرقمي.",
+    icon: Bot,
   },
   {
     id: 9,
     name: "زيد بشار",
-    role: "مطور تطبيقات موبايل آمنة",
+    role: "Secure Mobile App Developer", // Translated role
     avatarUrl: "/avatars/team/zaid-bashar.svg",
-    bio: "يبني تطبيقات جوال قوية مع التركيز على الأمان.",
+    icon: Code,
   },
   {
     id: 10,
     name: "فاطمة حازم",
-    role: "محللة استخبارات التهديدات",
+    role: "Threat Intelligence Analyst", // Translated role
     avatarUrl: "/avatars/team/fatima-hazim.svg",
-    bio: "تتنبأ بالهجمات وتحللها لحماية المؤسسات.",
+    icon: Search,
   },
   {
     id: 11,
     name: "عباس عقيل",
-    role: "متخصص في الاستجابة للحوادث الرقمية",
+    role: "Digital Incident Response Specialist", // Translated role
     avatarUrl: "/avatars/team/abbas-aqeel.svg",
-    bio: "يتعامل مع الحوادث الأمنية بكفاءة وسرعة.",
+    icon: Activity,
   },
 ]
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 60, scale: 0.85 },
+  hidden: { opacity: 0, filter: "blur(10px)", y: 70 },
   visible: (i: number) => ({
     opacity: 1,
+    filter: "blur(0px)",
     y: 0,
-    scale: 1,
     transition: {
-      delay: i * 0.1, // Faster stagger
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1], // Smooth cubic bezier for pop effect
+      delay: i * 0.12,
+      duration: 0.7,
+      ease: [0.16, 1, 0.3, 1],
     },
   }),
 }
 
 const TeamMemberCard: React.FC<{ member: TeamMember; index: number }> = ({ member, index }) => {
-  const cardRef = React.useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 })
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 })
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7.5deg", "-7.5deg"]) // Increased tilt
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7.5deg", "7.5deg"])
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
-    const mouseX = event.clientX - rect.left
-    const mouseY = event.clientY - rect.top
-    const xPct = mouseX / width - 0.5
-    const yPct = mouseY / height - 0.5
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0)
-    y.set(0)
-  }
+  const MemberIcon = member.icon || ShieldCheck
 
   return (
     <motion.div
-      ref={cardRef}
       key={member.id}
-      className="glassmorphic rounded-xl p-6 md:p-8 flex flex-col items-center shadow-card-shadow border border-brand-gold/40 w-full max-w-sm mx-auto" // Increased padding, max-width for larger cards
-      style={{
-        transformStyle: "preserve-3d", // Needed for 3D tilt
-        rotateX,
-        rotateY,
-      }}
+      className="relative group w-full max-w-md mx-auto p-6 md:p-8 rounded-xl border border-brand-gold/30 overflow-hidden"
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       custom={index}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      whileHover={{
-        boxShadow: "0 0 30px rgba(212, 175, 55, 0.5), 0 0 50px rgba(224, 198, 112, 0.3)", // More prominent gold glow
-        borderColor: "var(--brand-gold-light)",
-      }}
     >
-      <motion.div
-        className="relative w-36 h-36 md:w-44 md:h-44 mb-6 rounded-full overflow-hidden border-2 border-brand-gold shadow-gold-glow/60" // Larger avatar
-        style={{ transform: "translateZ(30px)" }} // Bring avatar forward
-        whileHover={{ scale: 1.05, borderColor: "var(--brand-gold-light)" }}
-      >
-        <Image
-          src={member.avatarUrl || "/placeholder.svg"}
-          alt={`صورة ${member.name}`}
-          layout="fill"
-          objectFit="cover"
-          className="transition-transform duration-300 ease-in-out"
-          priority={index < 3} // Prioritize loading for first few cards
-        />
-      </motion.div>
-      <motion.h3
-        className="text-xl md:text-2xl lg:text-3xl font-semibold text-brand-gold mb-2" // Larger name
-        style={{ transform: "translateZ(20px)" }}
-      >
-        {member.name}
-      </motion.h3>
-      <motion.p
-        className="text-sm md:text-base text-brand-cream/80 mb-4 font-mono text-center" // Centered role
-        style={{ transform: "translateZ(10px)" }}
-      >
-        {member.role}
-      </motion.p>
-      {member.bio && (
-        <motion.p
-          className="text-xs md:text-sm text-brand-cream/70 text-center leading-relaxed"
+      <div className="relative z-10 flex flex-col items-center">
+        <motion.div
+          className="relative w-32 h-32 md:w-40 md:h-40 mb-6 rounded-full overflow-hidden border-2 border-brand-gold group-hover:border-brand-gold-light transition-colors duration-300"
+          whileHover={{ scale: 1.05, boxShadow: "0 0 20px var(--brand-gold-light)" }}
+        >
+          <Image
+            src={member.avatarUrl || "/placeholder.svg"}
+            alt={`${member.name}'s avatar`}
+            layout="fill"
+            objectFit="cover"
+            className="transition-transform duration-300 ease-in-out group-hover:scale-110"
+            priority={index < 3}
+          />
+        </motion.div>
+        <motion.h3
+          className="text-xl md:text-2xl lg:text-3xl font-semibold text-brand-gold mb-2 group-hover:text-brand-gold-light transition-colors duration-300"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
+          transition={{ delay: index * 0.1 + 0.3, duration: 0.4 }}
         >
-          {member.bio}
-        </motion.p>
-      )}
+          {member.name}
+        </motion.h3>
+        <motion.div
+          className="flex items-center text-sm md:text-base text-brand-cream/80 mb-1 font-mono group-hover:text-brand-cream transition-colors duration-300" // Reduced bottom margin as bio is removed
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 + 0.4, duration: 0.4 }}
+        >
+          <MemberIcon
+            size={18}
+            className="mr-2 rtl:ml-2 text-brand-gold group-hover:text-brand-gold-light transition-colors duration-300"
+          />
+          {member.role}
+        </motion.div>
+        {/* Bio section removed */}
+      </div>
+      <motion.div
+        className="absolute inset-0 z-0"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-brand-gold/10 rounded-full blur-2xl animate-pulse group-hover:animate-none group-hover:scale-150 transition-transform duration-500"></div>
+        <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-brand-gold-light/5 rounded-full blur-2xl animate-pulse animation-delay-2000 group-hover:animate-none group-hover:scale-150 transition-transform duration-500"></div>
+      </motion.div>
     </motion.div>
   )
 }
 
 export default function TeamSection() {
   return (
-    <section id="team" className="min-h-screen py-20 md:py-28 bg-brand-grey">
+    <section id="team" className="min-h-screen py-20 md:py-28 bg-transparent">
       <div className="container mx-auto px-4 text-center">
         <AnimatedTitle
-          text="فــريــقــنــا" // Added spaces for letter spacing effect with some fonts
+          text="Our Team" // Translated title
           animationType="glitch"
-          className="text-4xl md:text-5xl lg:text-6xl font-bold mb-16 md:mb-20 inline-block text-brand-gold-light tracking-wider" // Wider tracking
+          className="text-4xl md:text-5xl lg:text-6xl font-bold mb-16 md:mb-20 inline-block text-brand-gold-light tracking-wider"
         />
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 lg:gap-16">
           {teamMembers.map((member, index) => (
             <TeamMemberCard key={member.id} member={member} index={index} />

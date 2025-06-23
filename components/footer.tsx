@@ -9,14 +9,16 @@ export default function Footer() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="py-8 border-t border-brand-gold/20 bg-brand-black mt-16" // Example: black background, subtle gold border
+      className="py-8 border-t border-brand-gold/20 bg-brand-black mt-16"
     >
       <div className="container flex flex-col items-center justify-between gap-6 sm:flex-row text-center sm:text-start">
         <div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Phantom Force - Iraq Cyber. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()} Iraq Cyber - Phantom Force. All rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground/70 mt-1">مصمم بشغف من قبل فريقنا.</p>
+          <p className="text-xs text-brand-cream/70 mt-1">
+            This site is an initial showcase of our team and capabilities, constantly evolving.
+          </p>
         </div>
         <div className="flex items-center space-x-4 rtl:space-x-reverse">
           {[
@@ -27,7 +29,7 @@ export default function Footer() {
           ].map((item, index) => (
             <motion.div
               key={item.label}
-              whileHover={{ scale: 1.2, color: "var(--brand-gold)" }} // Changed to brand-gold
+              whileHover={{ scale: 1.2, color: "var(--brand-gold)" }}
               whileTap={{ scale: 0.9 }}
             >
               <Link
@@ -35,7 +37,7 @@ export default function Footer() {
                 aria-label={item.label}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-cream/70 hover:text-brand-gold transition-colors" // Ensure text-brand-cream/70 for muted icons
+                className="text-brand-cream/70 hover:text-brand-gold transition-colors"
               >
                 {item.icon}
               </Link>
