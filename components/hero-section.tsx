@@ -2,33 +2,88 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ChevronDown, Zap } from "lucide-react"
+import { useState, useEffect } from "react"
 
-const headlineText = "Securing Tomorrow, Today"
-const taglineText =
-  "Guardians of the Digital Frontier. We are a passionate team of students dedicated to exploring and advancing the field of cybersecurity."
+const headlineText = "Phantom Force: حماية الفضاء السيبراني العراقي - قوة طلابية لمواجهة تحديات الغد."
+const taglineText = "11 طالبًا من الأمن السيبراني يقودون الابتكار والدفاع الرقمي في Iraq Cyber."
 
-// Animation variants for text
-const sentence = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delay: 0.2,
-      staggerChildren: 0.04, // Stagger for letters
-    },
-  },
+// Decrypting/Scanning effect for team name
+const teamName = "Phantom Force"
+const chars = "!<>-_\\/[]{}—=+*^?#________" // Characters for scrambling
+
+const DecryptingText = ({ text, finalColorClass }: { text: string; finalColorClass: string }) => {
+  const [displayText, setDisplayText] = useState("")
+  const [isDecrypting, setIsDecrypting] = useState(true)
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isDecrypting) {
+      let iteration = 0
+      interval = setInterval(() => {
+        setDisplayText(
+          text
+            .split("")
+            .map((_letter, index) => {
+              if (index < iteration) {
+                return text[index]
+              }
+              return chars[Math.floor(Math.random() * chars.length)]
+            })
+            .join(""),
+        )
+
+        if (iteration >= text.length) {
+          clearInterval(interval)
+          setIsDecrypting(false)
+          setDisplayText(text) // Ensure final text is set
+        }
+        iteration += 1 / 3 // Slower decryption
+      }, 50) // Speed of character change
+    }
+    return () => clearInterval(interval)
+  }, [text, isDecrypting])
+
+  // Trigger decryption on mount or when text changes
+  useEffect(() => {
+    setIsDecrypting(true)
+  }, [text])
+
+  return (
+    <span
+      className={`inline-block font-mono tracking-tighter ${isDecrypting ? "text-brand-gold-light" : finalColorClass}`}
+    >
+      {displayText}
+    </span>
+  )
 }
 
-const letter = {
-  hidden: { opacity: 0, y: 20 },
+// SplitText animation variants
+const titleVariants = {
+  hidden: { opacity: 0 },
+  visible: (i = 1) => ({
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: i * 0.1 }, // Stagger words
+  }),
+}
+
+const wordVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    filter: "blur(8px)",
+    scale: 0.9,
+  },
   visible: {
     opacity: 1,
     y: 0,
+    filter: "blur(0px)",
+    scale: 1,
     transition: {
       type: "spring",
       damping: 12,
       stiffness: 100,
+      duration: 0.8,
     },
   },
 }
@@ -36,67 +91,95 @@ const letter = {
 export default function HeroSection() {
   return (
     <motion.section
-      className="relative flex min-h-[calc(100vh-theme(spacing.14))] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-secondary/30 animate-background-pan py-12 md:py-24" // Added subtle gradient animation
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      id="hero"
+      className="relative flex min-h-[calc(100vh-5rem)] w-full flex-col items-center justify-center overflow-hidden py-12 md:py-24 text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      {/* Subtle background elements - placeholder for more complex patterns */}
-      <div className="absolute inset-0 z-0 opacity-5">
-        {/* Example: SVG pattern or image */}
-        {/* <img src="/circuit-pattern.svg" alt="Circuit pattern" className="w-full h-full object-cover" /> */}
-      </div>
+      <div className="container z-10 flex flex-col items-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5, y: -50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, type: "spring", stiffness: 120 }}
+          className="mb-8 flex flex-col items-center"
+        >
+          <div className="text-5xl md:text-7xl font-bold">
+            <DecryptingText text="Phantom" finalColorClass="text-brand-gold" />
+            <span className="mx-1 md:mx-2"></span> {/* Spacer */}
+            <DecryptingText text="Force" finalColorClass="text-brand-cream" />
+          </div>
+          <motion.p
+            className="text-xl md:text-2xl text-brand-gold-light font-semibold mt-2 tracking-wider"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: teamName.length * 0.05 * 2 + 0.5, duration: 0.5 }} // Delay after decryption
+          >
+            Iraq Cyber
+          </motion.p>
+        </motion.div>
 
-      <div className="container z-10 flex flex-col items-center text-center px-4">
         <motion.h1
-          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-electric-blue via-vibrant-green to-deep-purple"
-          variants={sentence}
+          className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl max-w-4xl leading-tight text-brand-cream"
+          variants={titleVariants}
           initial="hidden"
           animate="visible"
+          custom={1} // Delay factor for staggering
         >
-          {headlineText.split("").map((char, index) => (
-            <motion.span key={char + "-" + index} variants={letter}>
-              {char}
+          {headlineText.split(" ").map((word, index) => (
+            <motion.span
+              key={index}
+              variants={wordVariants}
+              className="inline-block mr-2 rtl:ml-2" // Add margin for spacing between words
+            >
+              {word}
             </motion.span>
           ))}
         </motion.h1>
 
         <motion.p
-          className="mt-6 max-w-xl text-lg text-muted-foreground md:text-xl"
-          initial={{ opacity: 0, y: 20 }}
+          className="mt-8 max-w-2xl text-lg text-muted-foreground md:text-xl"
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: headlineText.length * 0.04 + 0.5, duration: 0.6, ease: "easeOut" }} // Delay after headline
+          transition={{ delay: 1.8, duration: 0.8, ease: "easeOut" }} // Adjusted delay
         >
           {taglineText}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: headlineText.length * 0.04 + 1.0, duration: 0.5, ease: "easeOut" }} // Delay after tagline
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }} // Adjusted delay
+          className="mt-12"
         >
           <Button
             size="lg"
-            className="mt-10 group bg-electric-blue hover:bg-vibrant-green text-background font-semibold shadow-lg shadow-electric-blue/30 hover:shadow-vibrant-green/40 transition-all duration-300 ease-out transform hover:scale-105"
+            variant="default"
+            className="group px-8 py-4 text-lg font-semibold rounded-lg bg-brand-gold text-brand-black hover:bg-brand-gold-light shadow-gold-glow hover:shadow-gold-glow/70 transition-all duration-300 ease-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-brand-gold/50"
             asChild
           >
-            <motion.a // Use motion.a for Framer Motion on links if needed, or wrap Button
-              href="#projects" // Link to projects section (placeholder)
-              whileHover={{
-                boxShadow: "0 0 25px var(--electric-blue)",
-                // For more complex hover, you can use variants
-              }}
+            <motion.a
+              href="#about"
               whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
             >
-              Explore Our Work
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              اكتشف مهمتنا
+              <Zap className="ms-2 rtl:mr-2 h-5 w-5 transition-transform duration-300 group-hover:animate-pulse text-brand-black" />
             </motion.a>
           </Button>
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.5, duration: 0.5 }} // Adjusted delay
+          className="absolute bottom-10"
+        >
+          <a href="#about" aria-label="Scroll down">
+            <ChevronDown className="h-10 w-10 text-brand-gold/70 animate-bounce hover:text-brand-gold" />
+          </a>
+        </motion.div>
       </div>
-      {/* Placeholder for more complex background animations like particles */}
-      {/* <div className="absolute inset-0 z-0"> ... particles ... </div> */}
     </motion.section>
   )
 }

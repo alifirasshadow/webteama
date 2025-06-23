@@ -1,25 +1,26 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Roboto_Mono } from "next/font/google"
+import { Inter, Fira_Code } from "next/font/google" // Fira Code for monospace
 import "./globals.css"
-import { ThemeProvider } from "next-themes" // Assuming this is your existing ThemeProvider path
+import { ThemeProvider } from "next-themes"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+import Global3DBackground from "@/components/global-3d-background"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 })
 
-const roboto_mono = Roboto_Mono({
+const firaCode = Fira_Code({
   subsets: ["latin"],
-  variable: "--font-roboto-mono",
+  variable: "--font-fira-code",
   weight: ["400", "700"],
 })
 
 export const metadata: Metadata = {
-  title: "Student Cybersecurity Team",
-  description: "Guardians of the Digital Frontier - Securing Tomorrow, Today.",
+  title: "Phantom Force - Iraq Cyber",
+  description: "فريق طلابي عراقي متخصص في الأمن السيبراني، يقود الابتكار والدفاع الرقمي.",
     generator: 'v0.dev'
 }
 
@@ -29,14 +30,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${roboto_mono.variable}`}>
-      <body className="font-sans">
-        {" "}
-        {/* Default to Inter */}
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <div className="flex flex-col min-h-screen">
+    <html lang="ar" dir="rtl" suppressHydrationWarning className={`${inter.variable} ${firaCode.variable}`}>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
+          <Global3DBackground />
+          <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>

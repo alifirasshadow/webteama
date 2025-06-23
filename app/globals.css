@@ -4,70 +4,71 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Light mode background */
-    --foreground: 224 71.4% 4.1%; /* Light mode text */
+    --background: 0 0% 4%; /* #0A0A0A brand-black */
+    --foreground: 45 65% 92%; /* #F5F5DC brand-cream (for text on black) */
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card: 0 0% 12%; /* #1F1F1F brand-grey (for card backgrounds) */
+    --card-foreground: 45 65% 92%; /* brand-cream (text on cards) */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 12%; /* brand-grey */
+    --popover-foreground: 45 65% 92%; /* brand-cream */
 
-    --primary: 220.9 39.3% 11%; /* Adjusted for better contrast on light */
-    --primary-foreground: 210 20% 98%;
+    --primary: 45 74% 52%; /* #D4AF37 brand-gold */
+    --primary-foreground: 0 0% 4%; /* brand-black (text on gold buttons) */
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 45 67% 36%; /* #B8860B brand-gold-dark (for secondary elements or darker gold accents) */
+    --secondary-foreground: 45 65% 92%; /* brand-cream */
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 0 0% 12%; /* brand-grey */
+    --muted-foreground: 45 65% 80%; /* Slightly dimmer cream for muted text */
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent: 45 74% 66%; /* #E0C670 brand-gold-light (for highlights or accents) */
+    --accent-foreground: 0 0% 4%; /* brand-black */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive: 0 84.2% 60.2%; /* Standard destructive red, can be themed later if needed */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220.9 39.3% 11%; /* Adjusted for better visibility on light */
+    --border: 45 74% 30%; /* Darker gold for borders, or a subtle grey: 0 0% 15% */
+    --input: 0 0% 15%; /* Dark grey for input backgrounds */
+    --ring: 45 74% 52%; /* brand-gold for focus rings */
 
     --radius: 0.5rem;
 
-    /* Neon CSS Variables (can be used directly or via Tailwind classes) */
-    --electric-blue: #00ffff;
-    --vibrant-green: #39ff14;
-    --deep-purple: #8a2be2;
+    /* Direct CSS Variables for new palette */
+    --brand-black: #0a0a0a;
+    --brand-gold: #d4af37;
+    --brand-gold-light: #e0c670;
+    --brand-gold-dark: #b8860b;
+    --brand-cream: #f5f5dc;
+    --brand-grey: #1f1f1f;
   }
 
-  .dark {
-    --background: 224 71.4% 4.1%; /* Dark background - e.g., #0A0F1E */
-    --foreground: 210 20% 98%; /* Light text for dark mode */
+  /* Enforce dark theme (black and gold) by default */
+  html {
+    --background: var(--brand-black);
+    --foreground: var(--brand-cream);
 
-    --card: 224 71.4% 4.1%; /* Dark card background */
-    --card-foreground: 210 20% 98%;
+    --card: var(--brand-grey);
+    --card-foreground: var(--brand-cream);
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: var(--brand-grey);
+    --popover-foreground: var(--brand-cream);
 
-    --primary: 210 20% 98%; /* Light primary for dark mode */
-    --primary-foreground: 220.9 39.3% 11%;
+    --primary: var(--brand-gold);
+    --primary-foreground: var(--brand-black);
 
-    --secondary: 215 27.9% 16.9%; /* Darker secondary for dark mode */
-    --secondary-foreground: 210 20% 98%;
+    --secondary: var(--brand-gold-dark);
+    --secondary-foreground: var(--brand-cream);
 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: var(--brand-grey);
+    --muted-foreground: hsl(45, 65%, 80%); /* Slightly dimmer cream */
 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: var(--brand-gold-light);
+    --accent-foreground: var(--brand-black);
 
-    --destructive: 0 62.8% 30.6%; /* Darker destructive */
-    --destructive-foreground: 210 20% 98%;
-
-    --border: 215 27.9% 16.9%; /* Darker border */
-    --input: 215 27.9% 16.9%;
-    --ring: 210 20% 98%; /* Light ring for dark mode */
+    --border: hsl(45, 74%, 30%); /* Darker gold for borders */
+    --input: var(--brand-grey);
+    --ring: var(--brand-gold);
   }
 }
 
@@ -78,5 +79,28 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1; /* Enable common ligatures */
+    overflow-x: hidden; /* Prevent horizontal scroll often caused by animations */
   }
+  /* Custom scrollbar for cyberpunk theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--brand-grey);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-gold); /* Gold scrollbar thumb */
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-gold-light); /* Lighter gold on hover */
+  }
+}
+
+/* Glassmorphism utility */
+.glassmorphic {
+  background: rgba(31, 31, 31, 0.6); /* --brand-grey with alpha */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2); /* --brand-gold with alpha */
 }
